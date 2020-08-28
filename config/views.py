@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import HttpResponseRedirect, reverse, render
+from django.shortcuts import HttpResponseRedirect, reverse
 
 
 def index(request):

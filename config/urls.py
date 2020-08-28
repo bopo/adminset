@@ -19,5 +19,4 @@ urlpatterns = [
     url(r'^elfinder/', include('service.elfinder.urls')),
     url(r'^branches/', include('service.branches.urls')),
     url(r'^webssh/(?P<ids>\d+)/$', asset.webssh, name='webssh'),
-
 ]

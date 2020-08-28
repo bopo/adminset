@@ -287,9 +287,11 @@ def server_detail(request, ids):
 @permission_verify()
 def webssh(request, ids):
     host = Host.objects.get(id=ids)
+
     if not request.user.is_superuser:
         group = host.hostgroup_set.all()
         perms = request.user.role.webssh.all()
+
         for p in perms:
             if p not in group:
                 return HttpResponse("forbidden! you have no permissions.", status=403)
@@ -302,8 +304,10 @@ def node_status(request, ids):
     data = 2
     host = Host.objects.get(id=ids)
     cpu_data = GetSysData(host.hostname, "cpu", 1800)
+
     for doc in cpu_data.get_data():
         if doc:
             data = 1
             break
+
     return HttpResponse(data)

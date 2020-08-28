@@ -114,7 +114,7 @@ class ElfinderConnectorView(View):
         """
         used in get method calls
         """
-        if kwargs['optionset'] == 'sftp':
+        if 'sftp' == kwargs.get('optionset'):
             optinon_sets = self.get_optionset(**kwargs)
             optinon_sets['roots'][0]['storageKwArgs'] = {'host': '127.0.0.1', 'params': {'port': 22, 'username': 'test',
                                                                                          'password': 'password',
@@ -123,6 +123,7 @@ class ElfinderConnectorView(View):
             self.elfinder = ElfinderConnector(optinon_sets, request.session)
         else:
             self.elfinder = ElfinderConnector(self.get_optionset(**kwargs), request.session)
+
         return self.output(self.get_command(request.GET), request.GET)
 
     def post(self, request, *args, **kwargs):

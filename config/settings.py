@@ -10,15 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
+import configparser as cp
 import os
 
 import ldap
 from django_auth_ldap.config import LDAPSearch, PosixGroupType
-
-try:
-    import ConfigParser as cp
-except ImportError as e:
-    import configparser as cp
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -72,7 +68,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
 
     'storages',
-    'mfile',
+    'service.mfile',
 
 ]
 
@@ -222,12 +218,15 @@ REST_FRAMEWORK = {
 
 # ldap configurations
 ldap_enable = config.get('ldap', 'ldap_enable')
+
 if ldap_enable == "True":
     ldap_port = config.get('ldap', 'ldap_port')
+
     if ldap_port:
         ldap_server = config.get('ldap', 'ldap_server') + ":" + ldap_port
     else:
         ldap_server = config.get('ldap', 'ldap_server')
+
     base_dn = config.get('ldap', 'base_dn')
     ldap_manager = config.get('ldap', 'ldap_manager')
     ldap_password = config.get('ldap', 'ldap_password')

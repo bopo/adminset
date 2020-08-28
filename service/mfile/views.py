@@ -8,6 +8,6 @@ from service.accounts.permission import permission_verify
 
 class finder(LoginRequiredMixin, View):
 
-    # @method_decorator(permission_verify())
+    @method_decorator(permission_verify())
     def get(self, request):
-        return render('mfile/finder.html', locals())
+        return render(request, template_name='mfile/finder.html',)
