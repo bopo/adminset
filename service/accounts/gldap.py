@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from ldap3 import Server, Connection, SUBTREE
-from lib.common import get_dir
+
+from ..common.common import get_dir
 
 
 class UseLdap:
@@ -51,4 +52,3 @@ def change_ldap_passwd(username, newpwd):
     g = UseLdap()
     g.change_password(username, newpwd)
     return "OK"
-

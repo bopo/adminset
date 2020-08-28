@@ -11,14 +11,14 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+
 import ldap
-from django_auth_ldap.config import LDAPSearch, GroupOfNamesType, PosixGroupType
+from django_auth_ldap.config import LDAPSearch, PosixGroupType
+
 try:
     import ConfigParser as cp
 except ImportError as e:
     import configparser as cp
-
-
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -50,43 +50,56 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Application definition
 
 INSTALLED_APPS = [
-    'backends.setup',
-    'backends.navi',
-    'backends.cmdb',
-    'backends.configure',
-    'backends.accounts',
-    'backends.monitor',
-    'backends.appconf',
-    'backends.delivery',
-    'backends.elfinder',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
+    'service.setup',
+    'service.navi',
+    'service.cmdb',
+    'service.configure',
+    'service.accounts',
+    'service.monitor',
+    'service.appconf',
+    'service.delivery',
+    'service.elfinder',
+    'service.branches',
+
     'django_celery_results',
     'django_celery_beat',
 
     'storages',
     'mfile',
-    'backends.branches',
+
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'config.middleware.BetterExceptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'adminset.urls'
+# MIDDLEWARE = [
+#     'django.middleware.security.SecurityMiddleware',
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+# ]
+
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -105,8 +118,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'adminset.wsgi.application'
-
+WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
@@ -117,7 +129,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # DATABASES = {}
 # if config.get('db', 'engine') == 'mysql':
@@ -170,7 +181,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -184,11 +194,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 # sys.path.append(os.path.join(BASE_DIR, 'vendor').replace('\\', '/'))
-#STATIC_ROOT = os.path.join(APP_PATH,'static').replace('\\','/')
+# STATIC_ROOT = os.path.join(APP_PATH,'static').replace('\\','/')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets', 'static').replace('\\', '/'),
@@ -211,7 +220,7 @@ REST_FRAMEWORK = {
     )
 }
 
-#ldap configurations
+# ldap configurations
 ldap_enable = config.get('ldap', 'ldap_enable')
 if ldap_enable == "True":
     ldap_port = config.get('ldap', 'ldap_port')
@@ -244,7 +253,7 @@ if ldap_enable == "True":
     AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
         base_dn,
         ldap.SCOPE_SUBTREE,
-        #'(objectClass=posixGroup)',
+        # '(objectClass=posixGroup)',
         '(objectClass=*)',
     )
     AUTH_LDAP_GROUP_TYPE = PosixGroupType(name_attr='cn')
@@ -255,7 +264,7 @@ if ldap_enable == "True":
     is_active = config.get('ldap', 'is_active')
     is_superuser = config.get('ldap', 'is_superuser')
     if require_group:
-        #AUTH_LDAP_REQUIRE_GROUP = 'cn=enable,ou=scimall,dc=gldap,dc=com'
+        # AUTH_LDAP_REQUIRE_GROUP = 'cn=enable,ou=scimall,dc=gldap,dc=com'
         AUTH_LDAP_REQUIRE_GROUP = require_group
     # AUTH_LDAP_DENY_GROUP = 'cn=disabled,ou=django,ou=groups,dc=example,dc=com'
 

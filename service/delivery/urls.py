@@ -1,7 +1,7 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
-from django.conf.urls import url, include
-from delivery import deli, tasks
+from django.conf.urls import url
+
+from . import deli
+
 urlpatterns = [
     url(r'^deliadd/$', deli.delivery_add, name='delivery_add'),
     url(r'^delilist/$', deli.delivery_list, name='delivery_list'),

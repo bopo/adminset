@@ -1,8 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-from django.conf.urls import url, include
-from accounts import user, role, permission, gldap
-
+from . import user, role, permission
+from django.conf.urls import url
 
 urlpatterns = [
     # url(r'^$', user.user_list, name='accounts'),

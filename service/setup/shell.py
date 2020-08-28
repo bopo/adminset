@@ -1,15 +1,16 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
-from cmdb.models import Host, HostGroup
-from django.shortcuts import render, HttpResponse
-from config.views import get_dir
-from django.contrib.auth.decorators import login_required
-from accounts.permission import permission_verify
-from lib.log import log
-from lib.setup import get_scripts
-from lib.common import GetRedis
-from setup.tasks import shell_task
 import os
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, HttpResponse
+
+from ..accounts.permission import permission_verify
+from ..cmdb.models import Host, HostGroup
+from ..common.common import GetRedis
+from ..common.log import log
+from ..common.setup import get_scripts
+from ..configure.views import get_dir
+from ..setup.tasks import shell_task
+
 scripts_dir = get_dir("s_path")
 level = get_dir("log_level")
 log_path = get_dir("log_path")
@@ -37,13 +38,14 @@ def exec_scripts(request):
         args = request.POST.getlist('margs')
         shell_command = request.POST.get('mcommand')
 
-        #connect redis for record shell running status
+        # connect redis for record shell running status
         res = GetRedis.connect()
         res.set("shell_{0}".format(request.user.username), 1)
         # run async shell tasks
         shell_task(request, server, group, scripts, args, shell_command)
 
         return HttpResponse("ok")
+
 
 @login_required()
 def shellinfo(request):
@@ -58,6 +60,7 @@ def shellinfo(request):
     except IOError:
         ret = "Log file is empty waiting for created<br>"
     return HttpResponse(ret)
+
 
 @login_required()
 def logpage(request):

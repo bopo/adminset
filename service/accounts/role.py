@@ -1,13 +1,14 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from accounts.forms import RoleListForm
-from accounts.models import RoleList
-from accounts.permission import permission_verify
+
+from .forms import RoleListForm
+from .models import RoleList
+from .permission import permission_verify
 
 
 @login_required
@@ -62,4 +63,3 @@ def role_edit(request, ids):
 def role_del(request, ids):
     RoleList.objects.filter(id=ids).delete()
     return HttpResponseRedirect(reverse('role_list'))
-

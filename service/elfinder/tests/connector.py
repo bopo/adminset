@@ -1,9 +1,9 @@
 import os
 from django.conf import settings
 from django.utils import unittest
-from elfinder.conf import settings as ls
-from elfinder.connector import ElfinderConnector
-from elfinder.exceptions import ElfinderErrorMessages
+from ..conf import settings as ls
+from ..connector import ElfinderConnector
+from ..exceptions import ElfinderErrorMessages
 
 class ConnectorInitTestCase(unittest.TestCase):
     

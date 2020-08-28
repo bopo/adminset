@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.conf.urls import url, include
-from cmdb import api, idc, asset, group, cabinet
+from . import api, idc, asset, group, cabinet
 
 
 urlpatterns = [

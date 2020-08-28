@@ -1,13 +1,14 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render
-from cmdb.models import Cabinet
-from cmdb.forms import CabinetForm
 from django.contrib.auth.decorators import login_required
-from accounts.permission import permission_verify
 from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.shortcuts import render
+from django.urls import reverse
+
+from .forms import CabinetForm
+from .models import Cabinet
+from ..accounts.permission import permission_verify
 
 
 @login_required()
@@ -84,6 +85,6 @@ def server_list(request, cabinet_id):
     cab = Cabinet.objects.get(id=cabinet_id)
     servers = cab.serverList.all()
     results = {
-        'server_list':  servers,
+        'server_list': servers,
     }
     return render(request, 'cmdb/cabinet_server_list.html', results)

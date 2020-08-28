@@ -1,14 +1,15 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
+import os
+import time
+from subprocess import Popen, PIPE
+
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django_celery_beat.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 from django_celery_results.models import TaskResult
-from django.contrib.auth.decorators import login_required
-from accounts.permission import permission_verify
-from cmdb.api import get_object
-from setup.forms import PeriodicTaskForm, IntervalForm, CrontabForm, TaskResultForm
-from subprocess import Popen, PIPE
-import os, time
+
+from ..accounts.permission import permission_verify
+from ..cmdb.api import get_object
+from ..setup.forms import PeriodicTaskForm, IntervalForm, CrontabForm, TaskResultForm
 
 
 @login_required
@@ -246,7 +247,7 @@ def job_backend(request):
 @login_required
 @permission_verify()
 def job_backend_task(request, name, action):
-    cmd = "service "+name+" "+action
+    cmd = "service " + name + " " + action
     Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
     time.sleep(3)
     return redirect("/setup/jobbackend/")

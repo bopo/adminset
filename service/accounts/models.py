@@ -1,10 +1,7 @@
-from __future__ import unicode_literals
-
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-from cmdb.models import HostGroup
-from appconf.models import Project
-# Create your models here.
+from ..cmdb.models import HostGroup
+from ..appconf.models import Project
 
 
 class PermissionList(models.Model):
@@ -27,7 +24,7 @@ class RoleList(models.Model):
 
 
 class UserManager(BaseUserManager):
-    def create_user(self,email,username,password=None):
+    def create_user(self, email, username, password=None):
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -42,9 +39,9 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, username, password):
         user = self.create_user(email,
-            username=username,
-            password=password,
-        )
+                                username=username,
+                                password=password,
+                                )
 
         user.is_active = True
         user.is_superuser = True

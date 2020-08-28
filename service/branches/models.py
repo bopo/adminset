@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from django.db import models
-from appconf.models import AppOwner
-# Create your models here.
+
+from ..appconf.models import AppOwner
 
 
 class Region(models.Model):

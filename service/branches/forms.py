@@ -2,12 +2,11 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.forms.widgets import *
-from branches.models import Branch, Region, Resource
-from django.contrib.admin import widgets
+
+from .models import Branch, Region, Resource
 
 
 class RegionForm(forms.ModelForm):
-
     class Meta:
         model = Region
         exclude = ("id",)
@@ -21,7 +20,6 @@ class RegionForm(forms.ModelForm):
 
 
 class BranchForm(forms.ModelForm):
-
     class Meta:
         model = Branch
         exclude = ("id",)
@@ -37,7 +35,6 @@ class BranchForm(forms.ModelForm):
 
 
 class ResourceForm(forms.ModelForm):
-
     class Meta:
         model = Resource
         exclude = ("id",)

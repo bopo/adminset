@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-from django.conf.urls import url, include
-from branches import region, branch, resource
+from django.conf.urls import url
+
+from . import region, branch, resource
 
 urlpatterns = [
     url(r'^$', region.region_list, name='branches'),

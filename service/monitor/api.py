@@ -1,12 +1,14 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
-from lib.common import token_verify
-from pymongo import MongoClient
-from config.views import get_dir
-from django.shortcuts import HttpResponse
 import time
+
+from django.shortcuts import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from pymongo import MongoClient
+
+from ..common.common import token_verify
+from ..configure.views import get_dir
 
 
 class GetSysData(object):
@@ -25,7 +27,7 @@ class GetSysData(object):
         mongodb_user = get_dir("mongodb_user")
         mongodb_pwd = get_dir("mongodb_pwd")
         if mongodb_user:
-            uri = 'mongodb://'+mongodb_user+':'+mongodb_pwd+'@'+mongodb_ip+':'+mongodb_port+'/'+cls.db
+            uri = 'mongodb://' + mongodb_user + ':' + mongodb_pwd + '@' + mongodb_ip + ':' + mongodb_port + '/' + cls.db
             client = MongoClient(uri)
         else:
             client = MongoClient(mongodb_ip, int(mongodb_port))
@@ -36,8 +38,9 @@ class GetSysData(object):
         db = client[self.db]
         collection = db[self.hostname]
         now_time = int(time.time())
-        find_time = now_time-self.timing
-        cursor = collection.find({'timestamp': {'$gte': find_time}}, {self.monitor_item: 1, "timestamp": 1}).limit(self.no)
+        find_time = now_time - self.timing
+        cursor = collection.find({'timestamp': {'$gte': find_time}}, {self.monitor_item: 1, "timestamp": 1}).limit(
+            self.no)
         return cursor
 
 
@@ -55,4 +58,3 @@ def received_sys_info(request):
         return HttpResponse("Post the system Monitor Data successfully!")
     else:
         return HttpResponse("Your push have errors, Please Check your data!")
-

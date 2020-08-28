@@ -1,15 +1,17 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render, HttpResponseRedirect, HttpResponse
-from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
-from branches.models import Branch
-from branches.forms import BranchForm
-from accounts.permission import permission_verify
 import csv
 import datetime
-from cmdb.api import str2gb
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse
+from django.urls import reverse
+
+from .forms import BranchForm
+from .models import Branch
+from ..accounts.permission import permission_verify
+from ..cmdb.api import str2gb
 
 
 @login_required()
@@ -17,7 +19,7 @@ from cmdb.api import str2gb
 def branch_list(request):
     all_branch = Branch.objects.all()
     results = {
-        'all_branch':  all_branch,
+        'all_branch': all_branch,
     }
     return render(request, 'branches/branch_list.html', results)
 
@@ -94,10 +96,10 @@ def branch_export(request):
     response = HttpResponse(content_type='text/csv')
     now = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M')
     file_name = 'adminset_branch_' + now + '.csv'
-    response['Content-Disposition'] = "attachment; filename="+file_name
+    response['Content-Disposition'] = "attachment; filename=" + file_name
     writer = csv.writer(response)
     writer.writerow([str2gb(u'机构名称'), str2gb(u'机构地址'), str2gb(u'负责人'), str2gb(u'电话'),
-                     str2gb(u'说明'),])
+                     str2gb(u'说明'), ])
     for p in branch_find:
         writer.writerow([str2gb(p.name), str2gb(p.address), p.owner, p.telphone,
                          str2gb(p.owner)])
@@ -110,6 +112,6 @@ def resource_detail(request, branch_id):
     branch = Branch.objects.get(id=branch_id)
     resources = branch.resource_set.all()
     results = {
-        'resources':  resources,
+        'resources': resources,
     }
     return render(request, 'branches/branch_resource_list.html', results)

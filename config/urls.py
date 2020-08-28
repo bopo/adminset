@@ -1,23 +1,23 @@
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.conf import settings
-from adminset.views import index
-from cmdb import asset
+
+from service.cmdb import asset
+from .views import index
 
 urlpatterns = [
     url(r'^$', index, name='index'),
-    url(r'^cmdb/', include('cmdb.urls')),
-    url(r'^navi/', include('navi.urls')),
+    url(r'^cmdb/', include('service.cmdb.urls')),
+    url(r'^navi/', include('service.navi.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^setup/', include('setup.urls')),
-    url(r'^monitor/', include('monitor.urls')),
-    url(r'^config/', include('config.urls')),
-    url(r'^accounts/', include('accounts.urls')),
-    url(r'^appconf/', include('appconf.urls')),
-    url(r'^delivery/', include('delivery.urls')),
+    url(r'^setup/', include('service.setup.urls')),
+    url(r'^monitor/', include('service.monitor.urls')),
+    url(r'^config/', include('service.configure.urls')),
+    url(r'^accounts/', include('service.accounts.urls')),
+    url(r'^appconf/', include('service.appconf.urls')),
+    url(r'^delivery/', include('service.delivery.urls')),
     url(r'^mfile/', include('mfile.urls')),
-    url(r'^elfinder/',include('elfinder.urls')),
-    url(r'^branches/',include('branches.urls')),
+    url(r'^elfinder/', include('service.elfinder.urls')),
+    url(r'^branches/', include('service.branches.urls')),
     url(r'^webssh/(?P<ids>\d+)/$', asset.webssh, name='webssh'),
 
 ]

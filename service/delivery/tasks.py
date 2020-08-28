@@ -1,14 +1,13 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-from celery import shared_task
-from subprocess import Popen, PIPE
-from delivery.models import Delivery
 import os
-import shutil
-from time import sleep, ctime
 import re
+import shutil
+from subprocess import Popen, PIPE
+from time import sleep, ctime
+
 import sh
+from celery import shared_task
+
+from .models import Delivery
 
 
 @shared_task
@@ -61,7 +60,7 @@ def deploy(job_name, server_list, app_path, source_address, project_id, auth_inf
     p1.bar_data = 30
     p1.save()
     with open(log_path + log_name, 'ab+') as f:
-        f.writelines(cmd+"\n")
+        f.writelines(cmd + "\n")
         f.writelines(data)
         f.writelines("\n")
     if p1.shell:
@@ -81,7 +80,7 @@ def deploy(job_name, server_list, app_path, source_address, project_id, auth_inf
     else:
         r_code = "--verbose"
     for server in server_list:
-        #mkdir app_path
+        # mkdir app_path
         try:
             sh.ssh("-p {0}".format(deploy_port), "{1}@{0}".format(server, username),
                    "ls {0}".format(app_path))
@@ -93,10 +92,10 @@ def deploy(job_name, server_list, app_path, source_address, project_id, auth_inf
             f.writelines("\n+++rsync code to {0} +++\n".format(server))
         if os.path.exists(exclude_file):
             cmd = "rsync -e 'ssh -p {6}' --progress -raz {4} --exclude-from {3} {0}/code/ {5}@{1}:{2}".format(
-                    job_workspace, server, app_path, exclude_file, r_code, username, deploy_port)
+                job_workspace, server, app_path, exclude_file, r_code, username, deploy_port)
         else:
             cmd = "rsync -e 'ssh -p {5}' --progress -raz {3} --exclude '.git' --exclude '.svn' {0}/code/ {4}@{1}:{2}".format(
-                    job_workspace, server, app_path, r_code, username, deploy_port)
+                job_workspace, server, app_path, r_code, username, deploy_port)
         data = cmd_exec(cmd)
         with open(log_path + log_name, 'ab+') as f:
             f.writelines(cmd)
@@ -114,7 +113,7 @@ def deploy(job_name, server_list, app_path, source_address, project_id, auth_inf
                 f.writelines(data)
         if p1.bar_data <= 125:
             cur_bar = p1.bar_data
-            p1.bar_data = cur_bar+5
+            p1.bar_data = cur_bar + 5
             p1.save()
     if p1.shell and p1.shell_position:
         with open(log_path + log_name, 'ab+') as f:
@@ -180,8 +179,8 @@ def svn_clone(job_workspace, auth_info, source_address, p1):
         source_address += p1.version
     if os.path.exists("{0}code/.svn".format(job_workspace)):
         cmd = "svn --non-interactive --trust-server-cert --username {2} --password {3} update {0} {1}code/".format(
-                source_address, job_workspace, auth_info["username"], auth_info["password"])
+            source_address, job_workspace, auth_info["username"], auth_info["password"])
     else:
         cmd = "svn --non-interactive --trust-server-cert --username {2} --password {3} checkout {0} {1}code/".format(
-                source_address, job_workspace, auth_info["username"], auth_info["password"])
+            source_address, job_workspace, auth_info["username"], auth_info["password"])
     return cmd

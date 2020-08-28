@@ -1,38 +1,42 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
-# update by guohongze@126.com
-from django.shortcuts import render, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
 from django.contrib import auth
-from accounts.forms import LoginUserForm, EditUserForm, ChangePasswordForm, ChangeLdapPasswordForm
 from django.contrib.auth import get_user_model
-from accounts.forms import AddUserForm
-from django.core.urlresolvers import reverse
-from accounts.permission import permission_verify
-from accounts.gldap import change_ldap_passwd
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, HttpResponseRedirect
+from django.urls import reverse
+
+from .forms import AddUserForm
+from .forms import LoginUserForm, EditUserForm, ChangePasswordForm, ChangeLdapPasswordForm
+from .gldap import change_ldap_passwd
+from .permission import permission_verify
 
 
 def login(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return HttpResponseRedirect('/')
-    if request.method == 'GET' and request.GET.has_key('next'):
+
+    if request.method == 'GET' and request.GET.get('next'):
         next_page = request.GET['next']
     else:
         next_page = '/'
+
     if next_page == "/accounts/logout/":
         next_page = '/'
+
     if request.method == "POST":
         form = LoginUserForm(request, data=request.POST)
+
         if form.is_valid():
             auth.login(request, form.get_user())
             return HttpResponseRedirect(request.POST['next'])
     else:
         form = LoginUserForm(request)
+
     kwargs = {
         'request': request,
-        'form':  form,
+        'form': form,
         'next': next_page,
     }
+
     return render(request, 'accounts/login.html', kwargs)
 
 
@@ -47,7 +51,7 @@ def logout(request):
 def user_list(request):
     all_user = get_user_model().objects.all()
     kwargs = {
-        'all_user':  all_user,
+        'all_user': all_user,
     }
     return render(request, 'accounts/user_list.html', kwargs)
 
@@ -100,7 +104,8 @@ def user_edit(request, ids):
 @permission_verify()
 def reset_password(request, ids):
     user = get_user_model().objects.get(id=ids)
-    newpassword = get_user_model().objects.make_random_password(length=10, allowed_chars='abcdefghjklmnpqrstuvwxyABCDEFGHJKLMNPQRSTUVWXY3456789')
+    newpassword = get_user_model().objects.make_random_password(length=10,
+                                                                allowed_chars='abcdefghjklmnpqrstuvwxyABCDEFGHJKLMNPQRSTUVWXY3456789')
     print('====>ResetPassword:{}-->{}'.format(user.username, newpassword))
     user.set_password(newpassword)
     user.save()

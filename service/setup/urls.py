@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-from django.conf.urls import url, include
-from . import views, ansible, shell, jobs
+from django.conf.urls import url
 
+from . import ansible, shell, jobs
 
 urlpatterns = [
     url(r'^ansible/$', ansible.index, name='ansible'),

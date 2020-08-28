@@ -1,18 +1,11 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from __future__ import absolute_import, unicode_literals
-
+from celery import current_app
+from celery.utils import cached_property
 from django import forms
 from django.forms.widgets import Select
 from django.utils.translation import ugettext_lazy as _
-
-from celery import current_app
-from celery.utils import cached_property
-from kombu.utils.json import loads
-
 from django_celery_beat.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 from django_celery_results.models import TaskResult
+from kombu.utils.json import loads
 
 try:
     from django.utils.encoding import force_text
@@ -30,7 +23,7 @@ class TaskSelectWidget(Select):
         _ = self._modules  # noqa
         tasks = list(sorted(name for name in self.celery_app.tasks
                             if not name.startswith('celery.')))
-        return (('', ''), ) + tuple(zip(tasks, tasks))
+        return (('', ''),) + tuple(zip(tasks, tasks))
 
     @property
     def choices(self):
@@ -60,7 +53,8 @@ class TaskChoiceField(forms.ChoiceField):
 
 class PeriodicTaskForm(forms.ModelForm):
     """Form that lets you create and modify periodic tasks."""
-    def __init__(self,*args,**kwargs):
+
+    def __init__(self, *args, **kwargs):
         super(PeriodicTaskForm, self).__init__(*args, **kwargs)
         self.fields['expires'].label = u"过期时间"
 
@@ -131,21 +125,18 @@ class PeriodicTaskForm(forms.ModelForm):
 
 
 class IntervalForm(forms.ModelForm):
-
     class Meta:
         model = IntervalSchedule
         exclude = ("id",)
 
 
 class CrontabForm(forms.ModelForm):
-
     class Meta:
         model = CrontabSchedule
         exclude = ("id",)
 
 
 class TaskResultForm(forms.ModelForm):
-
     class Meta:
         model = TaskResult
         exclude = ("id",)

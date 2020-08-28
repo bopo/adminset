@@ -1,18 +1,20 @@
 import json
+
 from django.http import HttpResponse, Http404
 from django.utils.decorators import method_decorator
-from django.views.generic.base import View
 from django.views.decorators.csrf import csrf_exempt
-from exceptions import ElfinderErrorMessages
-from elfinder.connector import ElfinderConnector
-from elfinder.conf import settings as ls
-from django.shortcuts import render_to_response
+from django.views.generic.base import View
+
+from .conf import settings as ls
+from .connector import ElfinderConnector
+from .exceptions import ElfinderErrorMessages
+
 
 class ElfinderConnectorView(View):
     """
     Default elfinder backend view
     """
-    
+
     def render_to_response(self, context, **kwargs):
         """
         It returns a json-encoded response, unless it was otherwise requested
@@ -20,7 +22,7 @@ class ElfinderConnectorView(View):
         """
         kwargs = {}
         additional_headers = {}
-        #create response headers
+        # create response headers
         if 'header' in context:
             for key in context['header']:
                 if key == 'Content-Type':
@@ -30,28 +32,29 @@ class ElfinderConnectorView(View):
                 else:
                     additional_headers[key] = context['header'][key]
             del context['header']
-        
-        #return json if not header
+
+        # return json if not header
         if not 'content_type' in kwargs:
             kwargs['content_type'] = 'application/json'
-            
-        if 'pointer' in context: #return file
+
+        if 'pointer' in context:  # return file
             context['pointer'].seek(0)
             kwargs['content'] = context['pointer'].read()
             context['volume'].close(context['pointer'], context['info']['hash'])
-        elif 'raw' in context and context['raw'] and 'error' in context and context['error']: #raw error, return only the error list
+        elif 'raw' in context and context['raw'] and 'error' in context and context[
+            'error']:  # raw error, return only the error list
             kwargs['content'] = context['error']
-        elif kwargs['content_type'] == 'application/json': #return json
+        elif kwargs['content_type'] == 'application/json':  # return json
             kwargs['content'] = json.dumps(context)
-        else: #return context as is!
+        else:  # return context as is!
             kwargs['content'] = context
-        
+
         response = HttpResponse(**kwargs)
         for key, value in additional_headers.items():
             response[key] = value
 
         return response
-    
+
     def output(self, cmd, src):
         """
         Collect command arguments, operate and return self.render_to_response()
@@ -71,7 +74,7 @@ class ElfinderConnectorView(View):
                 arg = name
                 if name.endswith('_'):
                     name = name[:-1]
-                if name in src: 
+                if name in src:
                     try:
                         args[arg] = src.get(name).strip()
                     except:
@@ -84,7 +87,7 @@ class ElfinderConnectorView(View):
             args['targets'] = src.getlist('targets[0]')
         args['debug'] = src['debug'] if 'debug' in src else False
         return self.render_to_response(self.elfinder.execute(cmd, **args))
-    
+
     def get_command(self, src):
         """
         Get requested command
@@ -93,14 +96,14 @@ class ElfinderConnectorView(View):
             return src['cmd']
         except KeyError:
             return 'open'
-        
+
     def get_optionset(self, **kwargs):
         set_ = ls.ELFINDER_CONNECTOR_OPTION_SETS[kwargs['optionset']]
         if kwargs['start_path'] != 'default':
             for root in set_['roots']:
                 root['startPath'] = kwargs['start_path']
         return set_
-    
+
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         if not kwargs['optionset'] in ls.ELFINDER_CONNECTOR_OPTION_SETS:
@@ -113,7 +116,10 @@ class ElfinderConnectorView(View):
         """
         if kwargs['optionset'] == 'sftp':
             optinon_sets = self.get_optionset(**kwargs)
-            optinon_sets['roots'][0]['storageKwArgs'] = {'host':'127.0.0.1','params':{'port':22,'username':'test','password':'password','timeout':30},'root_path':'/','interactive':False}
+            optinon_sets['roots'][0]['storageKwArgs'] = {'host': '127.0.0.1', 'params': {'port': 22, 'username': 'test',
+                                                                                         'password': 'password',
+                                                                                         'timeout': 30},
+                                                         'root_path': '/', 'interactive': False}
             self.elfinder = ElfinderConnector(optinon_sets, request.session)
         else:
             self.elfinder = ElfinderConnector(self.get_optionset(**kwargs), request.session)
@@ -126,12 +132,16 @@ class ElfinderConnectorView(View):
         """
         if kwargs['optionset'] == 'sftp':
             optinon_sets = self.get_optionset(**kwargs)
-            optinon_sets['roots'][0]['storageKwArgs'] = {'host':'127.0.0.1','params':{'port':22,'username':'test','password':'password','timeout':30},'root_path':'/','interactive':False}
+            optinon_sets['roots'][0]['storageKwArgs'] = {'host': '127.0.0.1', 'params': {'port': 22, 'username': 'test',
+                                                                                         'password': 'password',
+                                                                                         'timeout': 30},
+                                                         'root_path': '/', 'interactive': False}
             self.elfinder = ElfinderConnector(optinon_sets, request.session)
         else:
-            self.elfinder = ElfinderConnector(self.get_optionset(**kwargs), request.session)        
+            self.elfinder = ElfinderConnector(self.get_optionset(**kwargs), request.session)
         cmd = self.get_command(request.POST)
-        
+
         if not cmd in ['upload']:
-            self.render_to_response({'error' : self.elfinder.error(ElfinderErrorMessages.ERROR_UPLOAD, ElfinderErrorMessages.ERROR_UPLOAD_TOTAL_SIZE)})
+            self.render_to_response({'error': self.elfinder.error(ElfinderErrorMessages.ERROR_UPLOAD,
+                                                                  ElfinderErrorMessages.ERROR_UPLOAD_TOTAL_SIZE)})
         return self.output(cmd, request.POST)

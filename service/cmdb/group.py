@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render
-from cmdb.models import HostGroup
-from cmdb.forms import GroupForm
+from .models import HostGroup
+from .forms import GroupForm
 from django.contrib.auth.decorators import login_required
-from accounts.permission import permission_verify
+from ..accounts.permission import permission_verify
 from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 
 @login_required()

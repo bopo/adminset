@@ -1,23 +1,23 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-from django.shortcuts import render, HttpResponse
-from cmdb.models import Host, Idc, HostGroup
-from appconf.product import Product
-from django.contrib.auth.decorators import login_required
-from accounts.permission import permission_verify
 import json
 import time
-from monitor.api import GetSysData
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from delivery.models import Delivery
+
+from .api import GetSysData
+from ..accounts.permission import permission_verify
+from ..cmdb.models import Host, Idc, HostGroup
 
 TIME_SECTOR = (
-            3600,
-            3600*3,
-            3600*5,
-            86400,
-            86400*3,
-            86400*7,
+    3600,
+    3600 * 3,
+    3600 * 5,
+    86400,
+    86400 * 3,
+    86400 * 7,
 )
 
 
@@ -138,19 +138,21 @@ def host_tree():
         single_server_list = []
         for host in idc.host_set.all():
             if not host.cabinet_set.all():
-                single_server_list.append({'name': host.hostname, 'url': "/monitor/system/{}/0/".format(host.hostname), 'target':"myframe"})
+                single_server_list.append(
+                    {'name': host.hostname, 'url': "/monitor/system/{}/0/".format(host.hostname), 'target': "myframe"})
         cabinet_list = []
         cabinets = idc.cabinet_set.all()
         for cabinet in cabinets:
             server_list = []
             servers = cabinet.serverList.all()
             for server in servers:
-                server_data = {'name': server.hostname, 'url': "/monitor/system/{}/0/".format(server.hostname), 'target':"myframe"}
+                server_data = {'name': server.hostname, 'url': "/monitor/system/{}/0/".format(server.hostname),
+                               'target': "myframe"}
                 server_list.append(server_data)
             cabinet_data = {'name': cabinet.name, 'children': server_list}
             cabinet_list.append(cabinet_data)
             del server_list
-        data = {"name": idc.name, "open": False, "children": cabinet_list + single_server_list }
+        data = {"name": idc.name, "open": False, "children": cabinet_list + single_server_list}
         del cabinet_list
         host_node.append(data)
     return host_node
@@ -162,7 +164,8 @@ def group_tree():
         server_list = []
         servers = group.serverList.all()
         for server in servers:
-            server_data = {'name': server.hostname, 'url': "/monitor/system/{}/0/".format(server.hostname), 'target':"myframe"}
+            server_data = {'name': server.hostname, 'url': "/monitor/system/{}/0/".format(server.hostname),
+                           'target': "myframe"}
             server_list.append(server_data)
         group_data = {'name': group.name, "open": False, 'children': server_list}
         group_node.append(group_data)
@@ -194,5 +197,5 @@ def group_tree():
 @login_required
 @csrf_exempt
 def tree_node(request):
-    all_node = host_tree() + group_tree() #+ product_tree()
+    all_node = host_tree() + group_tree()  # + product_tree()
     return HttpResponse(json.dumps(all_node))

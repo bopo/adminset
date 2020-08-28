@@ -1,11 +1,9 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from .models import navi
-from django.shortcuts import render
-from navi.forms import navi_form
 from django.contrib.auth.decorators import login_required
-from accounts.permission import permission_verify
+from django.shortcuts import render
+
+from .forms import navi_form
+from .models import navi
+from ..accounts.permission import permission_verify
 
 
 @login_required()

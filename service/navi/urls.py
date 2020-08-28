@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.conf.urls import url, include
-from navi import views
+from . import views
 
 urlpatterns = [
     url(r'^navilist/$', views.index, name='navi'),

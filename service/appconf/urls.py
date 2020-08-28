@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-from django.conf.urls import url, include
-from appconf import product, project, appowner, authinfo
+from django.conf.urls import url
+
+from . import product, project, appowner, authinfo
 
 urlpatterns = [
     url(r'^appowneradd/$', appowner.appowner_add, name='appowner_add'),

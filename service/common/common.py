@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.http import HttpResponse
-from config.views import get_dir
+from ..configure.views import get_dir
 import json
 import redis
 

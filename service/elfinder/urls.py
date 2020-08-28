@@ -12,10 +12,10 @@ Class-based views
 Including another URLconf
     1. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import include, url
-from django.contrib.admin.views.decorators import staff_member_required
-from elfinder.views import ElfinderConnectorView 
+from django.conf.urls import url
+from .views import ElfinderConnectorView
 
 urlpatterns = [
-    url(r'^yawd-connector/(?P<optionset>.+)/(?P<start_path>.+)/$',ElfinderConnectorView.as_view(),name='yawdElfinderConnectorView'),
+    url(r'^yawd-connector/(?P<optionset>.+)/(?P<start_path>.+)/$', ElfinderConnectorView.as_view(),
+        name='yawdElfinderConnectorView'),
 ]

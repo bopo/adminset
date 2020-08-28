@@ -1,16 +1,13 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
 from django.db import models
-from appconf.models import AuthInfo
+
+from ..appconf.models import AuthInfo
 
 ASSET_STATUS = (
     (str(1), u"使用中"),
     (str(2), u"未使用"),
     (str(3), u"故障"),
     (str(4), u"其它"),
-    )
+)
 
 ASSET_TYPE = (
     (str(1), u"物理机"),
@@ -19,12 +16,12 @@ ASSET_TYPE = (
     (str(4), u"网络设备"),
     (str(5), u"安全设备"),
     (str(6), u"其他")
-    )
+)
 
 
 class UserInfo(models.Model):
-    username = models.CharField(max_length=30,null=True)
-    password = models.CharField(max_length=30,null=True)
+    username = models.CharField(max_length=30, null=True)
+    password = models.CharField(max_length=30, null=True)
 
     def __unicode__(self):
         return self.username
@@ -80,9 +77,9 @@ class Cabinet(models.Model):
     desc = models.CharField(u"描述", max_length=100, blank=True)
 
     serverList = models.ManyToManyField(
-            Host,
-            blank=True,
-            verbose_name=u"所在服务器"
+        Host,
+        blank=True,
+        verbose_name=u"所在服务器"
     )
 
     def __unicode__(self):
@@ -94,9 +91,9 @@ class HostGroup(models.Model):
     desc = models.CharField(u"描述", max_length=100, blank=True)
 
     serverList = models.ManyToManyField(
-            Host,
-            blank=True,
-            verbose_name=u"所在服务器"
+        Host,
+        blank=True,
+        verbose_name=u"所在服务器"
     )
 
     def __unicode__(self):
@@ -105,8 +102,8 @@ class HostGroup(models.Model):
 
 class IpSource(models.Model):
     net = models.CharField(max_length=30)
-    subnet = models.CharField(max_length=30,null=True)
-    describe = models.CharField(max_length=30,null=True)
+    subnet = models.CharField(max_length=30, null=True)
+    describe = models.CharField(max_length=30, null=True)
 
     def __unicode__(self):
         return self.net
@@ -114,10 +111,10 @@ class IpSource(models.Model):
 
 class InterFace(models.Model):
     name = models.CharField(max_length=30)
-    vendor = models.CharField(max_length=30,null=True)
-    bandwidth = models.CharField(max_length=30,null=True)
-    tel = models.CharField(max_length=30,null=True)
-    contact = models.CharField(max_length=30,null=True)
+    vendor = models.CharField(max_length=30, null=True)
+    bandwidth = models.CharField(max_length=30, null=True)
+    tel = models.CharField(max_length=30, null=True)
+    contact = models.CharField(max_length=30, null=True)
     startdate = models.DateField()
     enddate = models.DateField()
     price = models.IntegerField(verbose_name=u'价格')

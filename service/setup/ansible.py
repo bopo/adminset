@@ -1,19 +1,23 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from subprocess import Popen, PIPE
-from cmdb.models import Host, HostGroup
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-import os, json, sh, datetime
-from config.views import get_dir
-from django.contrib.auth.decorators import login_required
-from accounts.permission import permission_verify
+import datetime
 import logging
-from lib.log import log
-from lib.setup import get_playbook, get_roles
-from setup.tasks import ansible_task
-from lib.common import GetRedis
+import os
+
+import sh
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.shortcuts import render
+
+from ..accounts.permission import permission_verify
+from ..cmdb.models import Host, HostGroup
+from ..common.common import GetRedis
+from ..common.log import log
+from ..common.setup import get_playbook, get_roles
+from ..configure.views import get_dir
+from ..setup.tasks import ansible_task
+
 # var info
 ansible_dir = get_dir("a_path")
 roles_dir = get_dir("r_path")
@@ -22,18 +26,18 @@ level = get_dir("log_level")
 log_path = get_dir("log_path")
 log("setup.log", level, log_path)
 
-def write_role_vars(roles, vargs):
 
+def write_role_vars(roles, vargs):
     r_vars = vargs.split('\r\n')
     for r in roles:
 
         if vargs:
-            if os.path.exists(roles_dir+r+"/vars"):
+            if os.path.exists(roles_dir + r + "/vars"):
                 pass
             else:
-                os.mkdir(roles_dir+r+"/vars")
+                os.mkdir(roles_dir + r + "/vars")
 
-            with open(roles_dir+r+'/vars/main.yml', 'wb+') as role_file:
+            with open(roles_dir + r + '/vars/main.yml', 'wb+') as role_file:
                 role_file.writelines("---\n")
                 for x in r_vars:
                     rs = x + '\n'
@@ -72,6 +76,7 @@ def playbook(request):
 
     return HttpResponse("ok")
 
+
 @login_required()
 def ansibleinfo(request):
     ret = []
@@ -86,9 +91,11 @@ def ansibleinfo(request):
         ret = "Log file is empty waiting for created<br>"
     return HttpResponse(ret)
 
+
 @login_required()
 def logpage(request):
     return render(request, 'setup/ansible_result.html')
+
 
 @login_required()
 def exec_status(request, exec_type):
@@ -103,6 +110,7 @@ def exec_status(request, exec_type):
         data = 0
     return HttpResponse(data)
 
+
 @login_required()
 @permission_verify()
 def host_sync(request):
@@ -110,28 +118,28 @@ def host_sync(request):
     now = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M')
     try:
         old_hosts = ansible_dir + "/hosts"
-        sh.scp(old_hosts, ansible_dir +"/hosts_adminset_backup_{0}".format(now))
+        sh.scp(old_hosts, ansible_dir + "/hosts_adminset_backup_{0}".format(now))
     except:
         pass
 
     group = HostGroup.objects.all()
-    ansible_file = open(ansible_dir+"/hosts", "wb")
+    ansible_file = open(ansible_dir + "/hosts", "wb")
     all_host = Host.objects.all()
     for host in all_host:
-        #gitlab ansible_host=10.100.1.76 host_name=gitlab
-        host_item = host.hostname+" "+"ansible_host="+host.ip+" "+"host_name="+host.hostname+"\n"
+        # gitlab ansible_host=10.100.1.76 host_name=gitlab
+        host_item = host.hostname + " " + "ansible_host=" + host.ip + " " + "host_name=" + host.hostname + "\n"
         ansible_file.write(host_item)
     for g in group:
-        group_name = "["+g.name+"]"+"\n"
+        group_name = "[" + g.name + "]" + "\n"
         ansible_file.write(group_name)
         get_member = HostGroup.objects.get(name=g)
         members = get_member.serverList.all()
         for m in members:
-            group_item = m.hostname+"\n"
+            group_item = m.hostname + "\n"
             ansible_file.write(group_item)
     ansible_file.close()
     logging.info("==========ansible tasks start==========")
-    logging.info("User:"+request.user.username)
+    logging.info("User:" + request.user.username)
     logging.info("Task: sync cmdb info to ansible hosts")
     logging.info("==========ansible tasks end============")
     return HttpResponse("ok")

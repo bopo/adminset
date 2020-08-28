@@ -1,21 +1,18 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 # 2017.3 update by guohongze@126.com
-from django.http import HttpResponse
-from cmdb.models import Host, HostGroup, ASSET_TYPE, ASSET_STATUS
-from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.views.decorators.csrf import csrf_exempt
-from lib.common import token_verify
-from lib.deploy_key import deploy_key
+import json
 import logging
-from lib.log import log
-from config.views import get_dir
 
+from django.core.paginator import Paginator, EmptyPage, InvalidPage
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
+from ..cmdb.models import Host, HostGroup
+from ..common.common import token_verify
+from ..common.deploy_key import deploy_key
+from ..common.log import log
+from ..configure.views import get_dir
 
 
 def str2gb(args):
@@ -25,13 +22,13 @@ def str2gb(args):
     """
     return str(args).encode('gb2312')
 
+
 def str2gbk(args):
     """
     :参数 args:
     :返回: GB2312编码
     """
     return str(args).encode('gbk')
-
 
 
 def str2gb2utf8(args):

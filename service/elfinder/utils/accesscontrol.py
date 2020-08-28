@@ -18,7 +18,7 @@ def fs_standard_access(attr, path, volume):
     """
 
     if os.path.basename(path) in ['.tmb', '.quarantine']:
-        #keep reserved folder names intact
+        # keep reserved folder names intact
         return None
 
     if volume.name() == 'localfilesystem':

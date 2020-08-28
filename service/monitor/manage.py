@@ -1,18 +1,18 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from django.shortcuts import render, HttpResponse
-from monitor.api import GetSysData
-from django.contrib.auth.decorators import login_required
-from accounts.permission import permission_verify
-from cmdb.models import Host
-from lib.common import get_dir
 import time
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, HttpResponse
+
+from .api import GetSysData
+from ..accounts.permission import permission_verify
+from ..cmdb.models import Host
+from ..common.common import get_dir
+
 TIME_SECTOR = (
-    86400*7,
-    86400*14,
-    86400*30,
-    86400*60,
+    86400 * 7,
+    86400 * 14,
+    86400 * 30,
+    86400 * 60,
 )
 
 
@@ -50,6 +50,6 @@ def del_monitor_data(request, timing):
             except:
                 continue
             now_time = int(time.time())
-            del_time = now_time-TIME_SECTOR[int(timing)]
+            del_time = now_time - TIME_SECTOR[int(timing)]
             collection.remove({'timestamp': {'$lte': del_time}}, {"timestamp": 1})
     return HttpResponse("ok")

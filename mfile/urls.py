@@ -13,21 +13,20 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url,include
-from django.contrib import admin
-from django.contrib.auth.views import LoginView,LogoutView
-from mfile.views import finder
-from django.views.static import serve
 from django.conf import settings
+from django.conf.urls import url, include
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.static import serve
+
+from .views import finder
 
 urlpatterns = [
-    url(r'^$',finder.as_view(),name='mfile'),
-    url(r'^elfinder/',include('elfinder.urls'))
+    url(r'^$', finder.as_view(), name='mfile'),
+    url(r'^elfinder/', include('service.elfinder.urls'))
 ]
 
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += [
-        url(r'^media/(?P<path>.*)$', serve, { 'document_root': settings.MEDIA_ROOT, }),
+        url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
     ]

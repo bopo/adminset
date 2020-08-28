@@ -1,7 +1,3 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
 from django.db import models
 
 
@@ -100,23 +96,19 @@ class Project(models.Model):
     appPath = models.CharField(u"程序部署路径", max_length=255, null=True, blank=True)
     configPath = models.CharField(u"配置文件路径", max_length=255, null=True, blank=True)
     product = models.ForeignKey(
-            Product,
-            null=True,
-            blank=True,
-            on_delete=models.SET_NULL,
-            verbose_name=u"所属产品线"
+        Product,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        verbose_name=u"所属产品线"
     )
     owner = models.ForeignKey(
-            AppOwner,
-            null=True,
-            blank=True,
-            on_delete=models.SET_NULL,
-            verbose_name=u"项目负责人"
+        AppOwner,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        verbose_name=u"项目负责人"
     )
 
     def __unicode__(self):
         return self.name
-
-
-
-

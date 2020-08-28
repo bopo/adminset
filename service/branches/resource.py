@@ -1,15 +1,17 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render, HttpResponseRedirect, HttpResponse
-from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
-from branches.models import Resource, Branch
-from branches.forms import ResourceForm
-from accounts.permission import permission_verify
 import csv
 import datetime
-from cmdb.api import str2gb, str2gbk
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse
+from django.urls import reverse
+
+from .forms import ResourceForm
+from .models import Resource, Branch
+from ..accounts.permission import permission_verify
+from ..cmdb.api import str2gb, str2gbk
 
 
 @login_required()
@@ -17,7 +19,7 @@ from cmdb.api import str2gb, str2gbk
 def resource_list(request):
     resources = Resource.objects.all()
     results = {
-        'resources':  resources,
+        'resources': resources,
     }
     return render(request, 'branches/resource_list.html', results)
 
@@ -74,6 +76,7 @@ def resource_edit(request, resource_id):
     }
     return render(request, 'branches/resource_base.html', results)
 
+
 @login_required
 @permission_verify()
 def resource_export(request):
@@ -85,7 +88,7 @@ def resource_export(request):
     writer = csv.writer(response)
     writer.writerow([str2gb('行政区域'), str2gb('分支机构'), str2gb('资源编码'), str2gb('资源名称'), str2gb('资源规格'),
                      str2gb('预算资金'), str2gb('合同资金'), str2gb('合同编号'), str2gb('合同开始'), str2gb('合同结束'),
-                     str2gb('供应商名'), str2gb('服务电话'), str2gb('客户经理'), str2gb('联系电话'),])
+                     str2gb('供应商名'), str2gb('服务电话'), str2gb('客户经理'), str2gb('联系电话'), ])
     for r in resource_find:
         br_name = ""
         if r.branch:
@@ -96,5 +99,5 @@ def resource_export(request):
                          str2gb(r.name), str2gb(r.spec), str2gb(r.budget), str2gb(r.paid), str2gb(r.contract),
                          str2gb(r.contract_start), str2gb(r.contract_end),
                          str2gb(r.supplier), r.service_phone, str2gb(r.owner if r.owner else None),
-                         str2gb(r.owner.phone if r.owner else None),])
+                         str2gb(r.owner.phone if r.owner else None), ])
     return response

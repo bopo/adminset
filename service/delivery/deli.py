@@ -1,18 +1,16 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import
-from django.shortcuts import render, HttpResponseRedirect, HttpResponse
-from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
-from delivery.models import Delivery
-from delivery.forms import DeliveryFrom
-from accounts.permission import permission_verify
-from delivery.tasks import deploy
-import os, re
-from time import sleep
 import json
-import time
-from cmdb.api import pages
+import os
+from time import sleep
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse
+from django.urls import reverse
+
+from .forms import DeliveryFrom
+from .models import Delivery
+from .tasks import deploy
+from ..accounts.permission import permission_verify
+from ..cmdb.api import pages
 
 
 @login_required()

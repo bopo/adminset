@@ -3,25 +3,18 @@
 
 import csv
 import datetime
-import sys
 import os
-import json
 
-from accounts.permission import permission_verify
-from cmdb.api import get_object, pages, str2gb, str2gb2utf8
-from config.views import get_dir
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import HttpResponse, render
-from cmdb.forms import AssetForm
-from cmdb.models import ASSET_STATUS, ASSET_TYPE, Host, HostGroup, Idc, Cabinet
-from monitor.api import GetSysData
 
-try:
-    reload(sys)  # Python 2
-    sys.setdefaultencoding('utf8')
-except NameError:
-    pass         # Python 3
+from .api import get_object, pages, str2gb, str2gb2utf8
+from .forms import AssetForm
+from .models import ASSET_STATUS, ASSET_TYPE, Host, HostGroup, Idc, Cabinet
+from ..accounts.permission import permission_verify
+from ..configure.views import get_dir
+from ..monitor.api import GetSysData
 
 
 @login_required()
@@ -102,7 +95,7 @@ def create_asset_excel(export, asset_id_all):
             response = HttpResponse(content_type='text/csv')
             now = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M')
             file_name = 'adminset_cmdb_' + now + '.csv'
-            response['Content-Disposition'] = "attachment; filename="+file_name
+            response['Content-Disposition'] = "attachment; filename=" + file_name
             writer = csv.writer(response)
             writer.writerow([str2gb(u'主机名'), str2gb(u'IP地址'), str2gb(u'其它IP'), str2gb(u'所在机房'),
                              str2gb(u'资产编号'), str2gb(u'设备类型'), str2gb(u'设备状态'), str2gb(u'操作系统'),
@@ -112,12 +105,12 @@ def create_asset_excel(export, asset_id_all):
             for h in asset_find:
                 if h.asset_type:
                     at_num = int(h.asset_type)
-                    a_type = ASSET_TYPE[at_num-1][1]
+                    a_type = ASSET_TYPE[at_num - 1][1]
                 else:
                     a_type = ""
                 if h.status:
                     at_as = int(h.status)
-                    a_status = ASSET_STATUS[at_as-1][1]
+                    a_status = ASSET_STATUS[at_as - 1][1]
                 else:
                     a_status = ""
                 writer.writerow([str2gb(h.hostname), h.ip, h.other_ip, str2gb(h.idc), str2gb(h.asset_no),
@@ -140,12 +133,12 @@ def create_asset_excel(export, asset_id_all):
         for h in host:
             if h.asset_type:
                 at_num = int(h.asset_type)
-                a_type = ASSET_TYPE[at_num-1][1]
+                a_type = ASSET_TYPE[at_num - 1][1]
             else:
                 a_type = ""
             if h.status:
                 at_as = int(h.status)
-                a_status = ASSET_STATUS[at_as-1][1]
+                a_status = ASSET_STATUS[at_as - 1][1]
             else:
                 a_status = ""
             writer.writerow([str2gb(h.hostname), h.ip, h.other_ip, str2gb(h.idc), str2gb(h.asset_no), str2gb(a_type),

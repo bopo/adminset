@@ -1,7 +1,6 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
-from django.conf.urls import url, include
-from monitor import system, manage, api
+from django.conf.urls import url
+
+from . import system, manage, api
 
 urlpatterns = [
     url(r'^system/$', system.index, name='monitor'),

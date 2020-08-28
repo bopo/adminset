@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render, HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from appconf.models import AuthInfo
-from appconf.forms import AuthInfoForm
-from accounts.permission import permission_verify
+from .models import AuthInfo
+from .forms import AuthInfoForm
+from ..accounts.permission import permission_verify
 
 
 @login_required()

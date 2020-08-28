@@ -1,10 +1,7 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
 from django.db import models
-from appconf.models import Project, AuthInfo
-from cmdb.models import Host
+
+from ..appconf.models import Project, AuthInfo
+from ..cmdb.models import Host
 
 # Create your models here.
 DEPLOY_POLICY = (
@@ -14,7 +11,7 @@ DEPLOY_POLICY = (
 
 
 class Delivery(models.Model):
-    job_name = models.OneToOneField(Project, verbose_name=u"项目名")
+    job_name = models.OneToOneField(Project, verbose_name=u"项目名", on_delete=models.CASCADE)
     description = models.CharField(max_length=255, verbose_name=u"项目描述", null=True, blank=True)
     deploy_policy = models.CharField(max_length=255, choices=DEPLOY_POLICY, verbose_name=u"部署策略")
     version = models.CharField(max_length=255, verbose_name=u"版本信息", blank=True)
@@ -32,9 +29,9 @@ class Delivery(models.Model):
         on_delete=models.SET_NULL
     )
     serverList = models.ManyToManyField(
-            Host,
-            blank=True,
-            verbose_name=u"所在服务器"
+        Host,
+        blank=True,
+        verbose_name=u"所在服务器"
     )
 
     def __unicode__(self):

@@ -1,13 +1,14 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render
-from cmdb.forms import IdcForm
-from .models import Idc, Cabinet
 from django.contrib.auth.decorators import login_required
-from accounts.permission import permission_verify
 from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.shortcuts import render
+from django.urls import reverse
+
+from .forms import IdcForm
+from .models import Idc
+from ..accounts.permission import permission_verify
 
 
 @login_required()
@@ -78,6 +79,6 @@ def cabinet_list(request, idc_id):
     cab = Idc.objects.get(id=idc_id)
     cabinets = cab.cabinet_set.all()
     results = {
-        'cabinet_list':  cabinets,
+        'cabinet_list': cabinets,
     }
     return render(request, 'cmdb/idc_cabinet_list.html', results)
