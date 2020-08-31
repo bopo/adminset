@@ -1,0 +1,6 @@
+git+https://gitee.com/ibopo/django-haystack.git
+git+https://gitee.com/ibopo/django-suit-dashboard.git
+git+https://gitee.com/ibopo/django-suit.git
+#../vendor/django-suit-dashboard
+#../vendor/drf-haystack
+django-suit-daterange_filter

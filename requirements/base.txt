@@ -1,0 +1,93 @@
+arrow
+django<3.2
+django-cors-headers
+django-environ
+django-extensions
+django-filter
+django-imagekit
+django-import-export
+django-model-utils
+# django-payments
+# django-thumbor
+django-money
+django-mptt
+# django-notifications-hq
+# djangorestframework-serializer-extensions
+# djangorestframework-api-key
+djangorestframework_xml
+django-rest-multiple-models
+django-reversion
+django-split-settings
+#./vendors/django-haystack
+#./vendors/drf-haystack
+django-taggit
+django-taggit-helpers
+django-taggit-labels
+django-taggit-anywhere
+django-taggit_serializer
+
+# extensions
+django-storages
+#./vendors/django-suit
+#./vendors/django-suit-dashboards
+django-suit-daterange-filter
+django-thumbor
+django_cleanup
+django-db-mailer
+# django-money-rates
+# django_multitenant
+
+# websocket
+# channels
+
+# modeltranslation
+# django-modeltranslation
+
+# polymorphic
+# django-polymorphic
+
+# storage
+# django-aliyun-oss2-storage
+# https://blog.csdn.net/u014633966/article/details/78727034
+
+# django-qiniu-storage
+# https://pypi.org/project/django-qiniu-storage/
+
+# django-upyun
+# https://gitee.com/enlangs/django-upyun-storage
+
+# drf
+djangorestframework
+djangorestframework-serializer-extensions
+# django-rest-registration
+drf-extensions
+
+# search
+elasticsearch>=5.0.0,<6.0.0
+hashids
+
+# app push
+pillow
+psutil
+jpush
+
+# lib
+# whitenoise
+# short_url
+pycrypto
+
+# payment
+python-alipay-sdk
+qrcode
+
+# wechat
+requests
+wechatpy
+wechat-django
+# simpleui
+# django-admin-tools
+# FeedParser
+weixin-python
+# phonenumbers
+dicttoxml
+xmltodict

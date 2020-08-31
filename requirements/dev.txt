@@ -1,0 +1,23 @@
+-r base.txt
+-r clis.txt
+-r docs.txt
+-r task.txt
+-r test.txt
+#-r vendor.txt
+
+better-exceptions
+
+django-baker
+django-cleanup
+
+django-debug-toolbar
+django-seed
+django-silk
+fabric3
+pip-tools
+raven
+sentry_sdk
+
+# library
+setuptools_scm
+werkzeug

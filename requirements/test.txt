@@ -1,0 +1,19 @@
+
+# selenium
+coverage
+ddt
+django-coverage-plugin
+django-jenkins
+httmock
+mock
+pytest-assume
+pytest-asyncio
+pytest-bdd
+pytest-cov
+pytest-django
+
+# pytest-rerunfailures
+pytest-ordering
+pytest-sugar
+pytest<5
+responses

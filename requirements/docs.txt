@@ -1,0 +1,7 @@
+coreapi
+# drf docs
+django-rest-swagger
+drf-yasg
+flex
+pangu
+ssv
