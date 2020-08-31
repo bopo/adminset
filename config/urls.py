@@ -6,6 +6,8 @@ from .views import index
 
 urlpatterns = [
     url(r'^$', index, name='index'),
+    url(r'^api/', include('service.restful.urls')),
+
     url(r'^cmdb/', include('service.cmdb.urls')),
     url(r'^navi/', include('service.navi.urls')),
     url(r'^admin/', admin.site.urls),

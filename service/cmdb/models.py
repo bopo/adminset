@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from ..appconf.models import AuthInfo
 
@@ -23,7 +24,7 @@ class UserInfo(models.Model):
     username = models.CharField(max_length=30, null=True)
     password = models.CharField(max_length=30, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.username
 
 
@@ -39,7 +40,7 @@ class Idc(models.Model):
     bandwidth = models.CharField(u"接入带宽", max_length=30, blank=True)
     memo = models.TextField(u"备注信息", max_length=200, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -67,7 +68,7 @@ class Host(models.Model):
     position = models.CharField(u"所在位置", max_length=100, blank=True)
     memo = models.TextField(u"备注信息", max_length=200, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.hostname
 
 
@@ -82,22 +83,25 @@ class Cabinet(models.Model):
         verbose_name=u"所在服务器"
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
 class HostGroup(models.Model):
     name = models.CharField(u"服务器组名", max_length=30, unique=True)
     desc = models.CharField(u"描述", max_length=100, blank=True)
-
     serverList = models.ManyToManyField(
         Host,
         blank=True,
         verbose_name=u"所在服务器"
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = _('主机管理')
+        verbose_name_plural = _('主机管理')
 
 
 class IpSource(models.Model):
@@ -105,7 +109,7 @@ class IpSource(models.Model):
     subnet = models.CharField(max_length=30, null=True)
     describe = models.CharField(max_length=30, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.net
 
 
@@ -119,5 +123,5 @@ class InterFace(models.Model):
     enddate = models.DateField()
     price = models.IntegerField(verbose_name=u'价格')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name

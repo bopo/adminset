@@ -1,8 +1,14 @@
 from django.conf.urls import url
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
-from . import deli
+from . import deli, views
+
+router = DefaultRouter()
+router.register('delivery', views.DeliveryViewSet, 'delivery')
 
 urlpatterns = [
+    path('', include(router.urls)),
     url(r'^deliadd/$', deli.delivery_add, name='delivery_add'),
     url(r'^delilist/$', deli.delivery_list, name='delivery_list'),
     url(r'^delistatus/(?P<project_id>\d+)/$', deli.status, name='delivery_status'),

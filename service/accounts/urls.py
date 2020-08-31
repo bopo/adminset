@@ -1,12 +1,14 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-from . import user, role, permission
 from django.conf.urls import url
+
+from . import user, role, permission
 
 urlpatterns = [
     # url(r'^$', user.user_list, name='accounts'),
     url(r'^login/$', user.login, name='login'),
     url(r'^logout/$', user.logout, name='logout'),
+
     url(r'^userlist/$', user.user_list, name='user_list'),
     url(r'^useradd/$', user.user_add, name='user_add'),
     url(r'^userdelete/(?P<ids>\d+)/$', user.user_del, name='user_del'),

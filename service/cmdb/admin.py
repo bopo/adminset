@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.contrib import admin
+
 from .models import Host, HostGroup, IpSource, Idc, InterFace, UserInfo
 
 
@@ -13,16 +14,16 @@ class HostAdmin(admin.ModelAdmin):
         'cpu_model',
         'cpu_num',
         'sn',
-        #'identity',
-        ]
+        # 'identity',
+    ]
 
 
 class HostGroupAdmin(admin.ModelAdmin):
-    list_display = ['name',]
+    list_display = ['name', ]
 
 
 class IpAdmin(admin.ModelAdmin):
-    list_display = ['net',]
+    list_display = ['net', ]
 
 
 class IdcAdmin(admin.ModelAdmin):
@@ -32,7 +33,8 @@ class IdcAdmin(admin.ModelAdmin):
 
 
 class InterFaceAdmin(admin.ModelAdmin):
-    list_display = ['name',]
+    list_display = ['name', ]
+
 
 admin.site.register(Host, HostAdmin)
 admin.site.register(IpSource, IpAdmin)

@@ -34,5 +34,5 @@ PyNaCl
 python-magic
 pytz
 six
-
+django-split_settings
 django_celery_results
